@@ -129,9 +129,7 @@ public class AndroidClient extends AppCompatActivity {
                 instream.close();
                 outstream.close();
                 instream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            } catch (Exception e) { e.printStackTrace(); }
         }
     }
     private void println(final String data){
@@ -146,14 +144,11 @@ public class AndroidClient extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-
         int id = item.getItemId();
 
         /*if (id == R.id.action_settings) {
             return true;
         }*/
-
         return super.onOptionsItemSelected(item);
     }
 }
