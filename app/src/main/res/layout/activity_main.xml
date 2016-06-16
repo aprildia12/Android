@@ -20,14 +20,14 @@
             android:layout_weight="1"
             android:text="Start"
             android:id="@+id/start"
-            android:onClick="onClick"/>
+            android:onClick="onDBClick"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Stop"
             android:id="@+id/stop"
-            android:onClick="onClick"/>
+            android:onClick="onDBClick"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,18 @@
             android:layout_height="wrap_content"
             android:text="Delete DB"
             android:id="@+id/delete"
-            android:onClick="onClick"/>
+            android:onClick="onDBClick"/>
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ToggleButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/sound"
+            android:textOn="Play"
+            android:textOff="Stop"
+            android:onClick="onSoundClick"/>
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"

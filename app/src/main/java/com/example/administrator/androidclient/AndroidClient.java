@@ -4,16 +4,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,28 +19,26 @@ public class AndroidClient extends AppCompatActivity {
     TextView textView;
     int updateTime = 3000;
     android.os.Handler handler = new android.os.Handler();
-
     private boolean runThread = true;
+
+    MediaPlayer mp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // DB 관련 코드
         textView = (TextView)findViewById(R.id.textView);
         mHelper = new DBHelper(this);
+
+        // Sound 관련 코드
+        mp = MediaPlayer.create(this, R.raw.sound1);
+        mp.setLooping(false);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-
-        //getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    public void onClick(View v) {
+    public void onDBClick(View v) {
         SQLiteDatabase database;
-        ConnectThread thread = new ConnectThread();
 
         database  = mHelper.getWritableDatabase();
         BackThread timeThread = new BackThread(database, updateTime);
@@ -127,32 +121,13 @@ public class AndroidClient extends AppCompatActivity {
         return dTime;
     }
 
-    class ConnectThread extends Thread {
-        public void run() {
-
-            String host = "192.168.123.101";
-            int port = 5001;
-
-            try {
-                Socket socket = new Socket(host, port);
-                System.out.println("서버로 연결되었습니다." + host + ", " + port);
-
-                String output = "Hello";
-                ObjectOutputStream outstream = new ObjectOutputStream(socket.getOutputStream());
-                outstream.writeObject(output);
-                outstream.flush();
-                System.out.println("서버로 보낸 데이터: " + output);
-
-                ObjectInputStream instream = new ObjectInputStream(socket.getInputStream());
-                Object input = instream.readObject();
-                System.out.println("서버로부터 받은 데이터: " + input);
-
-                instream.close();
-                outstream.close();
-                instream.close();
-            } catch (Exception e) { e.printStackTrace(); }
-        }
+    public void onSoundClick(View v) {
+        if (mp.isPlaying())
+            mp.pause();
+        else
+            mp.start();
     }
+
     private void println(final String data){
         handler.post(new Runnable() {
             @Override
@@ -160,17 +135,6 @@ public class AndroidClient extends AppCompatActivity {
                 textView.append(data + "\n");
             }
         });
-        //textView.append(data + "\n");   //
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        /*if (id == R.id.action_settings) {
-            return true;
-        }*/
-        return super.onOptionsItemSelected(item);
     }
 }
 
