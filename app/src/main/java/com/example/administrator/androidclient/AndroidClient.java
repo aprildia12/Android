@@ -9,20 +9,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class AndroidClient extends AppCompatActivity {
-    TextView textView;
-    EditText editText;  //
-    //
     DBHelper mHelper;
-    String databaseName;
-
+    TextView textView;
     android.os.Handler handler = new android.os.Handler();
 
     @Override
@@ -30,8 +28,8 @@ public class AndroidClient extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        textView = (TextView) findViewById(R.id.textView);
-        editText = (EditText) findViewById(R.id.db_name);  //
+        textView = (TextView)findViewById(R.id.textView);
+        mHelper = new DBHelper(this);
     }
 
     @Override
@@ -48,44 +46,39 @@ public class AndroidClient extends AppCompatActivity {
         SQLiteDatabase database;
 
         switch (v.getId()) {
-            case R.id.open:
-                try {
-                    databaseName = editText.getText().toString();
-                    mHelper = new DBHelper(this);
-                    println("데이터 베이스를 열었습니다. : " + databaseName);
-                } catch (Exception e) { e.printStackTrace(); }
-                break;
-            case R.id.add:
+            case R.id.insert:
                 try {
                     database = mHelper.getWritableDatabase();
-                    if (database != null) {
-                        database.execSQL("INSERT INTO Information (name, age, mobile) VALUES" +
-                                "('김가은' , 23, '010-1234-5678')");
-                        println("데이터를 추가했습니다.");
-                    } else
-                        println("데이터베이스를 먼저 열어야 합니다.");
+
+                    String currentDate = nowDate();
+                    String currentLocation = "'123.456.789.012'";
+                    database = mHelper.getWritableDatabase();
+                    database.execSQL("INSERT INTO MyLocation (date, location) VALUES" +
+                                "('" + currentDate + "', " + currentLocation + ")");
                 } catch(Exception e) { e.printStackTrace(); }
                 break;
-            case R.id.find:
+            case R.id.show:
                 try {
                     database = mHelper.getReadableDatabase();
-                    if(database != null) {
-                        Cursor cursor = database.rawQuery("SELECT name, age, mobile FROM Information", null);
+                    Cursor cursor = database.rawQuery("SELECT date, location FROM MyLocation", null);
 
-                        int count = cursor.getCount();
-                        println("결과 레코드의 갯수 : " + count);
+                    int count = cursor.getCount();
+                    println("레코드 개수 = " + count);
 
-                        int i = 0;
-                        while(cursor.moveToNext()) {
-                            String name = cursor.getString(0);
-                            int age = cursor.getInt(1);
-                            String mobile = cursor.getString(2);
+                    for (int i = 0; i < count; i++) {
+                        cursor.moveToNext();
 
-                            println("레코드 #" + i + " : " + name + ", " + age + ", " + mobile);
-                            i++;
-                        }
-                    } else
-                        println("데이터베이스를 먼저 열어야 합니다.");
+                        String date = cursor.getString(0);
+                        String location = cursor.getString(1);
+
+                        println("#" + i + " : " + date + ", " + location);
+                    }
+                } catch(Exception e) { e.printStackTrace(); }
+                break;
+            case R.id.delete:
+                try {
+                    database = mHelper.getWritableDatabase();
+                    database.execSQL("DELETE FROM MyLocation");
                 } catch(Exception e) { e.printStackTrace(); }
                 break;
         }
@@ -93,15 +86,22 @@ public class AndroidClient extends AppCompatActivity {
 
     class DBHelper extends SQLiteOpenHelper {
         public DBHelper(Context context) {
-            super(context, databaseName, null, 1);
+            super(context, "MyLocation", null, 1);
         }
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE Information ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + "name TEXT, age INTEGER, mobile TEXT);");
+            db.execSQL("CREATE TABLE MyLocation ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + "date TEXT, location TEXT);");
         }
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS Information");
+            db.execSQL("DROP TABLE IF EXISTS MyLocation");
             onCreate(db);
         }
+    }
+
+    public String nowDate() {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss", Locale.KOREA);
+        Date currentTime = new Date();
+        String dTime = formatter.format(currentTime);
+        return dTime;
     }
 
     class ConnectThread extends Thread {

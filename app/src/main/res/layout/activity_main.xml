@@ -14,38 +14,29 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/db_name"
-            android:text="test.db"/>
         <Button
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Open DB!"
-            android:id="@+id/open"
+            android:layout_weight="1"
+            android:text="Insert Data"
+            android:id="@+id/insert"
+            android:onClick="onButtonClicked"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Show Data"
+            android:id="@+id/show"
             android:onClick="onButtonClicked"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Add Data!"
-            android:id="@+id/add"
-            android:onClick="onButtonClicked"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Find Data!"
-            android:id="@+id/find"
+            android:text="Delete DB"
+            android:id="@+id/delete"
             android:onClick="onButtonClicked"/>
     </LinearLayout>
     <ScrollView
