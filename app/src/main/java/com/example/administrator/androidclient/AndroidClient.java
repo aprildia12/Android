@@ -21,7 +21,10 @@ import java.util.Locale;
 public class AndroidClient extends AppCompatActivity {
     DBHelper mHelper;
     TextView textView;
+    int updateTime = 3000;
     android.os.Handler handler = new android.os.Handler();
+
+    private boolean runThread = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,26 +42,26 @@ public class AndroidClient extends AppCompatActivity {
         return true;
     }
 
-    public void onButtonClicked(View v) {
-        ConnectThread thread = new ConnectThread();
-        thread.start();
-
+    public void onClick(View v) {
         SQLiteDatabase database;
+        ConnectThread thread = new ConnectThread();
+
+        database  = mHelper.getWritableDatabase();
+        BackThread timeThread = new BackThread(database, updateTime);
+        timeThread.setDaemon(true);
 
         switch (v.getId()) {
-            case R.id.insert:
+            case R.id.start:
                 try {
-                    database = mHelper.getWritableDatabase();
-
-                    String currentDate = nowDate();
-                    String currentLocation = "'123.456.789.012'";
-                    database = mHelper.getWritableDatabase();
-                    database.execSQL("INSERT INTO MyLocation (date, location) VALUES" +
-                                "('" + currentDate + "', " + currentLocation + ")");
+                    runThread = true;
+                    timeThread.start();
                 } catch(Exception e) { e.printStackTrace(); }
                 break;
-            case R.id.show:
+            case R.id.stop:
                 try {
+                    runThread = false;
+                    timeThread.join();
+
                     database = mHelper.getReadableDatabase();
                     Cursor cursor = database.rawQuery("SELECT date, location FROM MyLocation", null);
 
@@ -94,6 +97,26 @@ public class AndroidClient extends AppCompatActivity {
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
             db.execSQL("DROP TABLE IF EXISTS MyLocation");
             onCreate(db);
+        }
+    }
+
+    class BackThread extends Thread {
+        SQLiteDatabase mDatabase;
+        int updateTime;
+        BackThread(SQLiteDatabase database, int time) {
+            mDatabase = database;
+            updateTime = time;
+        }
+        public void run() {
+            while(runThread) {
+                String currentDate = nowDate();
+                String currentLocation = "'123.456.789.012'";
+                mDatabase = mHelper.getWritableDatabase();
+                mDatabase.execSQL("INSERT INTO MyLocation (date, location) VALUES" +
+                        "('" + currentDate + "', " + currentLocation + ")");
+
+                try { Thread.sleep(updateTime); } catch(InterruptedException e) {;}
+            }
         }
     }
 

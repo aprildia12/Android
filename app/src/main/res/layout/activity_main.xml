@@ -18,16 +18,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Insert Data"
-            android:id="@+id/insert"
-            android:onClick="onButtonClicked"/>
+            android:text="Start"
+            android:id="@+id/start"
+            android:onClick="onClick"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Show Data"
-            android:id="@+id/show"
-            android:onClick="onButtonClicked"/>
+            android:text="Stop"
+            android:id="@+id/stop"
+            android:onClick="onClick"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:text="Delete DB"
             android:id="@+id/delete"
-            android:onClick="onButtonClicked"/>
+            android:onClick="onClick"/>
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"
