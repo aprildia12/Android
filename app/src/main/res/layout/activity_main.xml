@@ -17,30 +17,14 @@
         <EditText
             android:layout_width="200dp"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/db_name"
             android:text="test.db"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Open DB!"
-            android:id="@+id/button"
-            android:onClick="onButton1Clicked"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/editText2"
-            android:text="customer"/>
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2. Make Table!"
-            android:id="@+id/button2"
-            android:onClick="onButton2Clicked"/>
+            android:id="@+id/open"
+            android:onClick="onButtonClicked"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -49,9 +33,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="3. Add Data!"
-            android:id="@+id/button3"
-            android:onClick="onButton3Clicked"/>
+            android:text="Add Data!"
+            android:id="@+id/add"
+            android:onClick="onButtonClicked"/>
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -60,9 +44,9 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="4. Find Data!"
-            android:id="@+id/button4"
-            android:onClick="onButton4Clicked"/>
+            android:text="Find Data!"
+            android:id="@+id/find"
+            android:onClick="onButtonClicked"/>
     </LinearLayout>
     <ScrollView
         android:layout_width="match_parent"

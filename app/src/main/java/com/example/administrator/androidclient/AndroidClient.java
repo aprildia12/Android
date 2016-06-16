@@ -3,6 +3,7 @@ package com.example.administrator.androidclient;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,12 +19,9 @@ import java.net.Socket;
 public class AndroidClient extends AppCompatActivity {
     TextView textView;
     EditText editText;  //
-    EditText editText2;
-
     //
+    DBHelper mHelper;
     String databaseName;
-    SQLiteDatabase database;
-    String tableName;
 
     android.os.Handler handler = new android.os.Handler();
 
@@ -33,8 +31,7 @@ public class AndroidClient extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         textView = (TextView) findViewById(R.id.textView);
-        editText = (EditText) findViewById(R.id.editText);  //
-        editText2 = (EditText) findViewById(R.id.editText2);
+        editText = (EditText) findViewById(R.id.db_name);  //
     }
 
     @Override
@@ -44,66 +41,67 @@ public class AndroidClient extends AppCompatActivity {
         return true;
     }
 
-    public void onButton1Clicked(View v) {  // onButtonClicked
+    public void onButtonClicked(View v) {
         ConnectThread thread = new ConnectThread();
         thread.start();
-        //
-        databaseName = editText.getText().toString();
-        try {
-            database = openOrCreateDatabase(databaseName, Context.MODE_PRIVATE, null);
-            println("데이터 베이스를 열었습니다. : " + databaseName);
-        } catch(Exception e) { e.printStackTrace(); }
+
+        SQLiteDatabase database;
+
+        switch (v.getId()) {
+            case R.id.open:
+                try {
+                    databaseName = editText.getText().toString();
+                    mHelper = new DBHelper(this);
+                    println("데이터 베이스를 열었습니다. : " + databaseName);
+                } catch (Exception e) { e.printStackTrace(); }
+                break;
+            case R.id.add:
+                try {
+                    database = mHelper.getWritableDatabase();
+                    if (database != null) {
+                        database.execSQL("INSERT INTO Information (name, age, mobile) VALUES" +
+                                "('김가은' , 23, '010-1234-5678')");
+                        println("데이터를 추가했습니다.");
+                    } else
+                        println("데이터베이스를 먼저 열어야 합니다.");
+                } catch(Exception e) { e.printStackTrace(); }
+                break;
+            case R.id.find:
+                try {
+                    database = mHelper.getReadableDatabase();
+                    if(database != null) {
+                        Cursor cursor = database.rawQuery("SELECT name, age, mobile FROM Information", null);
+
+                        int count = cursor.getCount();
+                        println("결과 레코드의 갯수 : " + count);
+
+                        int i = 0;
+                        while(cursor.moveToNext()) {
+                            String name = cursor.getString(0);
+                            int age = cursor.getInt(1);
+                            String mobile = cursor.getString(2);
+
+                            println("레코드 #" + i + " : " + name + ", " + age + ", " + mobile);
+                            i++;
+                        }
+                    } else
+                        println("데이터베이스를 먼저 열어야 합니다.");
+                } catch(Exception e) { e.printStackTrace(); }
+                break;
+        }
     }
 
-    public void onButton2Clicked(View v) {
-        tableName = editText2.getText().toString();
-
-        try {
-            if (database != null) {
-                database.execSQL("CREAT TABLE if not exists " + tableName + "(" +
-                "_id integer PRIMARY KEY autoincrement, " + "name text, " +
-                "age integer," + "mobile text" + ")");
-                println("테이블을 만들었습니다. : " + tableName);
-            } else
-                println("데이터베이스를 먼저 열어야 합니다.");
-        } catch(Exception e) { e.printStackTrace(); }
-    }
-
-    public void onButton3Clicked(View v) {
-       try {
-           if (tableName == null) {
-               tableName = editText2.getText().toString();
-           }
-           if (database != null) {
-               database.execSQL("INSERT INTO " + tableName + "(name, age, mobile) VALUES" +
-               "('김가은' , 24, '010-1234-5678)");
-               println("데이터를 추가했습니다.");
-           } else
-               println("데이터베이스를 먼저 열어야 합니다.");
-       } catch(Exception e) { e.printStackTrace(); }
-    }
-
-    public void onButton4Clicked(View v) {
-        try {
-            if(tableName == null)
-                tableName = editText2.getText().toString();
-            if(database != null) {
-                Cursor cursor = database.rawQuery("SELECT name, age, mobile FROM " + tableName, null);
-
-                int count = cursor.getCount();
-                println("결과 레코드의 갯수 : " + count);
-
-                for(int i = 0; i < count; i++) {
-                    cursor.moveToNext();
-                    String name = cursor.getString(0);
-                    int age = cursor.getInt(1);
-                    String mobile = cursor.getString(2);
-
-                    println("레코드 #" + i + " : " + name + ", " + age + ", " + mobile);
-                }
-            } else
-                println("데이터베이스를 먼저 열어야 합니다.");
-        } catch(Exception e) { e.printStackTrace(); }
+    class DBHelper extends SQLiteOpenHelper {
+        public DBHelper(Context context) {
+            super(context, databaseName, null, 1);
+        }
+        public void onCreate(SQLiteDatabase db) {
+            db.execSQL("CREATE TABLE Information ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + "name TEXT, age INTEGER, mobile TEXT);");
+        }
+        public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+            db.execSQL("DROP TABLE IF EXISTS Information");
+            onCreate(db);
+        }
     }
 
     class ConnectThread extends Thread {
@@ -139,7 +137,7 @@ public class AndroidClient extends AppCompatActivity {
                 textView.append(data + "\n");
             }
         });
-        textView.append(data + "\n");   //
+        //textView.append(data + "\n");   //
     }
 
     @Override
