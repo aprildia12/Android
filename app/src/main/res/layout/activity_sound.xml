@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="170sp">
+
+    <ToggleButton
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="10sp"
+        android:id="@+id/sound_play"
+        android:textOn="사운드 정지"
+        android:textOff="사운드 재생"
+        android:onClick="onSoundClick"/>
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/sound_play"
+        android:layout_margin="10sp"
+        android:id="@+id/sound_record"
+        android:text="사운드 녹음"
+        android:onClick="onSoundClick"/>
+
+</RelativeLayout>

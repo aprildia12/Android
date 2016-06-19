@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,62 +7,38 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingTop="150sp"
     tools:context="com.example.administrator.test1.MainActivity"
     android:orientation="vertical">
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- android:paddingTop="@dimen/activity_vertical_margin" -->
+
+    <Button
+        android:layout_width="200sp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Start"
-            android:id="@+id/start"
-            android:onClick="onDBClick"/>
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Stop"
-            android:id="@+id/stop"
-            android:onClick="onDBClick"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Delete DB"
-            android:id="@+id/delete"
-            android:onClick="onDBClick"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <ToggleButton
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/sound"
-            android:textOn="Play"
-            android:textOff="Stop"
-            android:onClick="onSoundClick"/>
-    </LinearLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/editText"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:background="#ffeeddcc">
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/textView"/>
-    </ScrollView>
-</LinearLayout>
+        android:layout_centerHorizontal="true"
+        android:layout_margin="5sp"
+        android:id="@+id/main_location"
+        android:text="위치 찾기"
+        android:onClick="onMenuClick"
+        />
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/main_location"
+        android:layout_margin="5sp"
+        android:id="@+id/main_sound"
+        android:text="사운드"
+        android:onClick="onMenuClick"
+        />
+    <Button
+        android:layout_width="200sp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/main_sound"
+        android:layout_margin="5sp"
+        android:id="@+id/main_option"
+        android:text="옵션"
+        android:onClick="onMenuClick"
+        />
+</RelativeLayout>
