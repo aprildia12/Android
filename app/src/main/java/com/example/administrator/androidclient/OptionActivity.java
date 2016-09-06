@@ -18,7 +18,13 @@ public class OptionActivity extends Activity{
             case R.id.option_location:
                 /////
                 break;
+            case R.id.option_camera:
+                /////
+                break;
             case R.id.option_sound:
+                /////
+                break;
+            case R.id.oprion_lock:
                 /////
                 break;
         }

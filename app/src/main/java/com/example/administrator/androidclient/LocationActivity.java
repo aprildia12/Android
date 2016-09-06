@@ -18,7 +18,7 @@ import java.util.Locale;
  * Created by Gaeun on 2016-06-19.
  */
 public class LocationActivity extends Activity {
-    DBHelper mHelper;
+    DBLocationHelper mHelper;
     TextView textView;
     int updateTime = 2000;
     android.os.Handler handler = new android.os.Handler();
@@ -30,7 +30,7 @@ public class LocationActivity extends Activity {
         setContentView(R.layout.activity_location);
 
         textView = (TextView)findViewById(R.id.textView);
-        mHelper = new DBHelper(this);
+        mHelper = new DBLocationHelper(this);
     }
 
     public void onDBClick(View v) {
@@ -53,7 +53,7 @@ public class LocationActivity extends Activity {
                     timeThread.join();
 
                     database = mHelper.getReadableDatabase();
-                    Cursor cursor = database.rawQuery("SELECT date, location FROM MyLocation", null);
+                    Cursor cursor = database.rawQuery("SELECT date, location FROM myLocation", null);
 
                     int count = cursor.getCount();
                     println("레코드 개수 = " + count);
@@ -71,21 +71,21 @@ public class LocationActivity extends Activity {
             case R.id.delete:
                 try {
                     database = mHelper.getWritableDatabase();
-                    database.execSQL("DELETE FROM MyLocation");
+                    database.execSQL("DELETE FROM myLocation");
                 } catch(Exception e) { e.printStackTrace(); }
                 break;
         }
     }
 
-    class DBHelper extends SQLiteOpenHelper {
-        public DBHelper(Context context) {
-            super(context, "MyLocation", null, 1);
+    class DBLocationHelper extends SQLiteOpenHelper {
+        public DBLocationHelper(Context context) {
+            super(context, "Location.db", null, 1);
         }
         public void onCreate(SQLiteDatabase db) {
-            db.execSQL("CREATE TABLE MyLocation ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + "date TEXT, location TEXT);");
+            db.execSQL("CREATE TABLE myLocation ( _id INTEGER PRIMARY KEY AUTOINCREMENT, " + "date TEXT, location TEXT);");
         }
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            db.execSQL("DROP TABLE IF EXISTS MyLocation");
+            db.execSQL("DROP TABLE IF EXISTS myLocation");
             onCreate(db);
         }
     }
